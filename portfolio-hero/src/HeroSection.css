@@ -158,6 +158,19 @@
   opacity: 0.7;
 }
 
+/* Full-screen Character Canvas: fixed background at z-index 0 */
+.character-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  display: block;
+  z-index: 0;
+  pointer-events: none;
+  will-change: contents;
+  transform: translateZ(0);
+}
+
 /* Hero Viewport Section */
 .hero-viewport {
   position: relative;
@@ -168,18 +181,18 @@
   overflow: hidden;
 }
 
-/* Bottom-Left Floating Editorial Text (No box covering face) */
+/* Bottom-Left Floating Editorial Text (Clear of character's face) */
 .hero-text {
   position: absolute;
-  bottom: 6vh;
+  bottom: 5vh;
   left: 5vw;
   pointer-events: auto;
-  max-width: 380px;
+  max-width: 360px;
   width: auto;
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.65rem;
   background: none;
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
@@ -325,7 +338,7 @@
 
   .hero-text {
     position: absolute;
-    bottom: 4vh;
+    bottom: 3vh;
     left: 1.25rem;
     right: 1.25rem;
     max-width: none;
@@ -334,19 +347,21 @@
     backdrop-filter: none;
     border: none;
     box-shadow: none;
-    gap: 0.65rem;
+    gap: 0.45rem;
   }
 
   .hero-title {
-    font-size: 2.85rem;
+    font-size: clamp(2.2rem, 7vw, 2.6rem);
   }
 
   .hero-subtitle {
-    font-size: 1rem;
+    font-size: 0.95rem;
   }
 
   .hero-summary {
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
+    max-width: 90%;
+    line-height: 1.4;
   }
 
   .hero-actions {
@@ -354,7 +369,7 @@
   }
 
   .hero-actions .btn-editorial {
-    padding: 0.65rem 1.15rem;
+    padding: 0.6rem 1.1rem;
     font-size: 0.8rem;
   }
 }

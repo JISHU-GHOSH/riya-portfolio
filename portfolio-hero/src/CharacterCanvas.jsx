@@ -13,16 +13,16 @@
 import { useRef, useEffect } from 'react';
 
 const NUM_FRAMES      = 64;
-const DEADZONE_RADIUS = 0.14;
+const DEADZONE_RADIUS = 0.08;
 const BG_COLOR        = '#e993a3';
 const FACE_CENTER_X   = 0.50;
 const FACE_CENTER_Y   = 0.38;
 
-// How fast the frame index lerps toward the target
-const FRAME_LERP      = 0.15;
+// Responsive, silky-smooth lerp speed
+const FRAME_LERP      = 0.22;
 
-// Prevents frame skipping: at most 1 frame index per tick
-const MAX_FRAME_STEP  = 1.0;
+// Fluid maximum step per frame to prevent sluggish lag while maintaining seamless continuity
+const MAX_FRAME_STEP  = 2.8;
 
 // Known source video aspect ratio (1920x1080 = 16:9)
 const ASPECT_RATIO    = 1920 / 1080;
@@ -221,11 +221,9 @@ export default function CharacterCanvas({ className = 'character-canvas' }) {
 
       const lf = 1 - Math.pow(1 - FRAME_LERP, dt);
 
-      // Two-phase tracking
+      // Fluid circular tracking with dynamic deceleration
       const absDiff = Math.abs(diff);
-      const step = absDiff > 3
-        ? Math.sign(diff) * MAX_FRAME_STEP
-        : Math.sign(diff) * Math.min(absDiff * lf, MAX_FRAME_STEP);
+      const step = Math.sign(diff) * Math.min(absDiff * Math.max(lf, 0.20), MAX_FRAME_STEP);
 
       s.smoothFrame = ((s.smoothFrame + step) % NUM_FRAMES + NUM_FRAMES) % NUM_FRAMES;
 

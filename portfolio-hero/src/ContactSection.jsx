@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { 
   Mail, 
   Copy, 
@@ -10,7 +10,7 @@ import {
   Globe, 
   ArrowUp
 } from 'lucide-react';
-import { useScrollReveal } from './useScrollReveal';
+import useScrollReveal from './useScrollReveal';
 import { playClick, playHover } from './soundEffects';
 import './ContactSection.css';
 

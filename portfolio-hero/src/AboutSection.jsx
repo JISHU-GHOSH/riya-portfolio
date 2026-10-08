@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { 
   ArrowUpRight, 
   FileText, 
@@ -9,7 +9,7 @@ import {
   Layers, 
   Compass 
 } from 'lucide-react';
-import { useScrollReveal } from './useScrollReveal';
+import useScrollReveal from './useScrollReveal';
 import { playClick, playHover } from './soundEffects';
 import './AboutSection.css';
 
@@ -152,7 +152,7 @@ export const HONORS_RESIDENCIES = [
  * curated exhibition timeline, and international honors.
  */
 export default function AboutSection({ onOpenResume, onOpenContact }) {
-  const sectionRef = React.useRef(null);
+  const sectionRef = useRef(null);
   useScrollReveal(sectionRef);
 
   return (

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import HeroSection from './HeroSection';
+import ProjectsSection from './ProjectsSection';
 
 export default function App() {
   const [isContactOpen, setIsContactOpen] = useState(false);
@@ -9,6 +10,8 @@ export default function App() {
     <HeroSection
       onOpenContact={() => setIsContactOpen(true)}
       onOpenResume={() => setIsResumeOpen(true)}
-    />
+    >
+      <ProjectsSection onOpenContact={() => setIsContactOpen(true)} />
+    </HeroSection>
   );
 }

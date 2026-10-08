@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Volume2, VolumeX, ArrowUpRight } from 'lucide-react';
 import CharacterCanvas from './CharacterCanvas';
+import ProjectsSection from './ProjectsSection';
 import { playClick, playHover, toggleMute, isMuted } from './soundEffects';
 import './HeroSection.css';
 
@@ -51,7 +52,7 @@ export default function HeroSection({
 
     const handleGlobalMouseOver = (e) => {
       const interactiveEl = e.target.closest(
-        'a, button, [role="button"], input, textarea, select, .clickable, .frosted-pill, .btn-editorial'
+        'a, button, [role="button"], input, textarea, select, .clickable, .frosted-pill, .btn-editorial, .work-card-media'
       );
       if (interactiveEl) {
         setIsHovered(true);
@@ -64,10 +65,10 @@ export default function HeroSection({
 
     const handleGlobalMouseOut = (e) => {
       const interactiveEl = e.target.closest(
-        'a, button, [role="button"], input, textarea, select, .clickable, .frosted-pill, .btn-editorial'
+        'a, button, [role="button"], input, textarea, select, .clickable, .frosted-pill, .btn-editorial, .work-card-media'
       );
       if (interactiveEl && e.relatedTarget && !e.relatedTarget.closest(
-        'a, button, [role="button"], input, textarea, select, .clickable, .frosted-pill, .btn-editorial'
+        'a, button, [role="button"], input, textarea, select, .clickable, .frosted-pill, .btn-editorial, .work-card-media'
       )) {
         setIsHovered(false);
         lastHoverTargetRef.current = null;
@@ -286,7 +287,9 @@ export default function HeroSection({
       </section>
 
       {/* Downstream Content Container for Works, Practice, Contact, etc. */}
-      {children && <div className="hero-children">{children}</div>}
+      <div className="hero-children">
+        {children || <ProjectsSection onOpenContact={onOpenContact} />}
+      </div>
     </div>
   );
 }

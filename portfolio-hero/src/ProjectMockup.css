@@ -1,0 +1,258 @@
+/* ProjectMockup.css — High-Fidelity Generative Visual Artwork Styling */
+
+.project-mockup-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 260px;
+  overflow: hidden;
+  border-radius: 14px;
+  background-color: #1a0f13;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  isolation: isolate;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+}
+
+.project-mockup-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  transform-origin: center center;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.project-mockup-wrapper:hover .project-mockup-svg {
+  transform: scale(1.03);
+}
+
+/* Subtle Film Grain Overlay */
+.mockup-noise-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.12;
+  mix-blend-mode: overlay;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 0);
+  background-size: 4px 4px;
+  z-index: 2;
+}
+
+/* Ambient Edge Vignette */
+.mockup-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at center, transparent 40%, rgba(18, 9, 12, 0.75) 100%);
+  z-index: 3;
+}
+
+/* Metadata Watermark Tag */
+.mockup-watermark {
+  position: absolute;
+  bottom: 0.85rem;
+  left: 0.85rem;
+  right: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.mockup-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.65rem;
+  background: rgba(18, 9, 12, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 9999px;
+  font-family: var(--font-cinzel);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.9);
+  text-transform: uppercase;
+}
+
+.mockup-pulse-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: #e993a3;
+  animation: mockup-pulse 2.2s infinite ease-in-out;
+}
+
+@keyframes mockup-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.4);
+    opacity: 0.4;
+  }
+}
+
+.mockup-id-tag {
+  font-family: var(--font-sans);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.55);
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+/* Animations for Generative SVG Elements */
+
+/* 1. Ethereal Resonance: undulating harmonic waves */
+@keyframes harmonic-undulate {
+  0% {
+    transform: translateY(0) scaleY(1);
+  }
+  50% {
+    transform: translateY(-8px) scaleY(1.05);
+  }
+  100% {
+    transform: translateY(0) scaleY(1);
+  }
+}
+
+@keyframes ray-shimmer {
+  0%, 100% {
+    opacity: 0.45;
+    transform: rotate(0deg);
+  }
+  50% {
+    opacity: 0.85;
+    transform: rotate(1.5deg);
+  }
+}
+
+.anim-harmonic-1 {
+  animation: harmonic-undulate 6s infinite ease-in-out;
+  transform-origin: center center;
+}
+
+.anim-harmonic-2 {
+  animation: harmonic-undulate 8s infinite ease-in-out reverse;
+  transform-origin: center center;
+}
+
+.anim-rays {
+  animation: ray-shimmer 7s infinite ease-in-out;
+  transform-origin: 300px 180px;
+}
+
+/* 2. Chromata: fluid organic ribbon shifts */
+@keyframes fluid-shift {
+  0% {
+    transform: scale(1) translate(0, 0);
+  }
+  50% {
+    transform: scale(1.03) translate(-6px, 4px);
+  }
+  100% {
+    transform: scale(1) translate(0, 0);
+  }
+}
+
+@keyframes fluid-glow {
+  0%, 100% {
+    opacity: 0.7;
+    filter: drop-shadow(0 0 15px rgba(233, 147, 163, 0.4));
+  }
+  50% {
+    opacity: 0.95;
+    filter: drop-shadow(0 0 28px rgba(220, 130, 147, 0.7));
+  }
+}
+
+.anim-fluid-ribbon-1 {
+  animation: fluid-shift 9s infinite ease-in-out;
+  transform-origin: center center;
+}
+
+.anim-fluid-ribbon-2 {
+  animation: fluid-shift 11s infinite ease-in-out reverse;
+  transform-origin: center center;
+}
+
+.anim-fluid-glow {
+  animation: fluid-glow 5s infinite ease-in-out;
+}
+
+/* 3. Flora Obscura: bioluminescent spore pulsing */
+@keyframes spore-float {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateY(-12px) translateX(6px);
+    opacity: 1;
+  }
+}
+
+@keyframes flora-sway {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(1.8deg);
+  }
+}
+
+.anim-spore-1 {
+  animation: spore-float 4.2s infinite ease-in-out;
+}
+
+.anim-spore-2 {
+  animation: spore-float 5.8s infinite ease-in-out 1.2s;
+}
+
+.anim-spore-3 {
+  animation: spore-float 3.6s infinite ease-in-out 0.6s;
+}
+
+.anim-flora-frond {
+  animation: flora-sway 7.5s infinite ease-in-out;
+  transform-origin: bottom center;
+}
+
+/* 4. Metamorphosis: geometric kinetic lattice */
+@keyframes lattice-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes lattice-morph {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.06) rotate(6deg);
+    opacity: 1;
+  }
+}
+
+.anim-lattice-spin {
+  animation: lattice-spin 42s linear infinite;
+  transform-origin: 300px 200px;
+}
+
+.anim-lattice-inner {
+  animation: lattice-morph 8s infinite ease-in-out;
+  transform-origin: 300px 200px;
+}

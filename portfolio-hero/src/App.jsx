@@ -1,11 +1,15 @@
 import React from 'react';
 import { Sparkles, ArrowUpRight, Eye } from 'lucide-react';
+import CharacterCanvas from './CharacterCanvas';
 
 export default function App() {
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ position: 'relative', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      {/* 60 FPS Cursor Tracking Character Background */}
+      <CharacterCanvas />
+
       {/* Top Navigation Pill Bar */}
-      <header style={{ padding: '1.5rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <header style={{ position: 'relative', zIndex: 10, padding: '1.5rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div className="frosted-pill font-cinzel" style={{ fontWeight: 700, letterSpacing: '0.1em' }}>
           <span>RIYA</span>
           <span style={{ opacity: 0.4 }}>•</span>
@@ -22,7 +26,7 @@ export default function App() {
       </header>
 
       {/* Main Editorial Hero Placeholder */}
-      <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
+      <main style={{ position: 'relative', zIndex: 10, flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
         <div className="glass-panel" style={{ maxWidth: '640px', width: '100%', padding: '3rem 2.5rem', textAlign: 'center' }}>
           <div className="editorial-tag" style={{ marginBottom: '1rem', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
             <Sparkles size={14} /> Visual Artist & Creative Director
@@ -48,7 +52,7 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <footer style={{ padding: '1.5rem 2rem', textAlign: 'center', fontSize: '0.8125rem', color: 'var(--text-muted)' }}>
+      <footer style={{ position: 'relative', zIndex: 10, padding: '1.5rem 2rem', textAlign: 'center', fontSize: '0.8125rem', color: 'var(--text-muted)' }}>
         © 2026 Riya. All rights reserved. Editorial interactive monograph.
       </footer>
     </div>

@@ -1,0 +1,379 @@
+/* ResumeModal.css — Exhibition Curriculum Vitae & Print Media Styles */
+
+.resume-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(22, 11, 15, 0.78);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 1.5rem;
+  box-sizing: border-box;
+  animation: resume-modal-fade-in 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes resume-modal-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.resume-modal-dialog {
+  position: relative;
+  width: 100%;
+  max-width: 860px;
+  max-height: 92vh;
+  overflow-y: auto;
+  background: rgba(255, 246, 248, 0.96);
+  backdrop-filter: blur(26px);
+  -webkit-backdrop-filter: blur(26px);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 26px;
+  box-shadow: 0 28px 70px rgba(22, 11, 15, 0.38);
+  padding: 2.5rem 3.5rem 3.5rem;
+  outline: none;
+  box-sizing: border-box;
+  animation: resume-modal-pop-up 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes resume-modal-pop-up {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Modal Controls Top Bar */
+.resume-controls-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid rgba(42, 23, 27, 0.1);
+  gap: 1rem;
+}
+
+.resume-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-olive);
+}
+
+.resume-actions-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.btn-print-cv {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 1.15rem;
+  border-radius: 9999px;
+  background: var(--accent-olive);
+  color: #ffffff;
+  border: none;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 10px rgba(61, 90, 69, 0.25);
+}
+
+.btn-print-cv:hover {
+  background: var(--accent-olive-hover);
+  transform: translateY(-1px);
+}
+
+.btn-resume-close {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(42, 23, 27, 0.15);
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-resume-close:hover {
+  background: var(--text-primary);
+  color: #ffffff;
+  transform: rotate(90deg);
+}
+
+/* Printable CV Document Content */
+.cv-document {
+  display: flex;
+  flex-direction: column;
+  gap: 2.25rem;
+}
+
+.cv-header {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+.cv-title-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.cv-artist-name {
+  font-size: clamp(2.5rem, 5vw, 3.4rem);
+  font-weight: 400;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  margin: 0;
+}
+
+.cv-artist-title {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent-olive);
+}
+
+.cv-contact-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.cv-divider {
+  border: none;
+  height: 1px;
+  background: rgba(42, 23, 27, 0.15);
+  margin: 0.25rem 0;
+}
+
+/* CV Sections */
+.cv-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+.cv-section-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  padding-bottom: 0.4rem;
+  border-bottom: 1.5px solid rgba(42, 23, 27, 0.15);
+  margin: 0;
+}
+
+.cv-statement-text {
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.cv-entries-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+.cv-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.cv-entry-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  font-size: 0.9375rem;
+  color: var(--text-primary);
+}
+
+.cv-entry-title {
+  color: var(--text-primary);
+}
+
+.cv-entry-year {
+  font-family: var(--font-cinzel);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--accent-olive);
+  flex-shrink: 0;
+}
+
+.cv-entry-sub {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.cv-entry-desc {
+  font-size: 0.84375rem;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  margin: 0.15rem 0 0;
+}
+
+.cv-entry-notes {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.cv-footer {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(42, 23, 27, 0.1);
+}
+
+.cv-footer-colophon {
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  text-align: center;
+  font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .resume-modal-dialog {
+    padding: 2rem 1.5rem 2.5rem;
+    max-height: 94vh;
+  }
+
+  .resume-controls-bar {
+    flex-wrap: wrap;
+  }
+
+  .cv-entry-head {
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+}
+
+/* -------------------------------------------------------------
+ * Clean High-Contrast Print Styles for window.print()
+ * ------------------------------------------------------------- */
+@media print {
+  /* Hide all surrounding portfolio layout & modals except printable CV */
+  body * {
+    visibility: hidden;
+  }
+
+  #cv-printable-area,
+  #cv-printable-area * {
+    visibility: visible;
+  }
+
+  .resume-modal-overlay {
+    position: static !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    padding: 0 !important;
+    display: block !important;
+    z-index: auto !important;
+  }
+
+  .resume-modal-dialog {
+    position: static !important;
+    background: #ffffff !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .resume-controls-bar {
+    display: none !important;
+  }
+
+  #cv-printable-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    color: #000000 !important;
+    background: #ffffff !important;
+    padding: 1.5cm !important;
+    box-sizing: border-box;
+  }
+
+  .cv-artist-name {
+    color: #000000 !important;
+    font-size: 28pt !important;
+  }
+
+  .cv-artist-title {
+    color: #333333 !important;
+    font-size: 9pt !important;
+  }
+
+  .cv-section-title {
+    color: #000000 !important;
+    border-bottom: 1pt solid #000000 !important;
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  .cv-entry {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .cv-entry-title,
+  .cv-entry-year,
+  .cv-entry-sub,
+  .cv-entry-desc,
+  .cv-entry-notes,
+  .cv-statement-text {
+    color: #111111 !important;
+  }
+
+  .cv-divider {
+    background: #cccccc !important;
+  }
+
+  .cv-footer-colophon {
+    color: #666666 !important;
+  }
+}

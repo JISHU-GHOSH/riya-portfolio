@@ -227,3 +227,43 @@ body {
   letter-spacing: 0.14em;
   color: var(--accent-olive);
 }
+
+/* ─────────────────────────────────────────────
+   Scroll-Driven Reveal Choreography (Apple / Linear Precision)
+   Hardware-accelerated entry animations with optical blur-dissolve & spring scale.
+───────────────────────────────────────────── */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(38px) scale(0.97);
+  filter: blur(8px);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform, filter;
+}
+
+.reveal-on-scroll.is-revealed {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0px);
+}
+
+/* Ensure hover transforms stay silky smooth once revealed */
+.work-card.reveal-on-scroll.is-revealed:hover,
+.discipline-card.reveal-on-scroll.is-revealed:hover,
+.about-statement-card.reveal-on-scroll.is-revealed:hover,
+.contact-main-card.reveal-on-scroll.is-revealed:hover {
+  transform: translateY(-4px) scale(1.005);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-on-scroll {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+    will-change: auto !important;
+  }
+}
+

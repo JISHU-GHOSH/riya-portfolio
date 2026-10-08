@@ -90,12 +90,9 @@ export const EXTERNAL_LINKS = [
 export default function ContactSection({ onOpenContact, onOpenResume }) {
   const [copied, setCopied] = useState(false);
   const studioEmail = 'studio@riya-art.com';
+  const sectionRef = useRef(null);
 
-  const [sectionRef] = useScrollReveal({
-    threshold: 0.1,
-    rootMargin: '0px 0px -40px 0px',
-    selector: '.reveal-item',
-  });
+  useScrollReveal(sectionRef);
 
   // Copy email to clipboard handler
   const handleCopyEmail = useCallback(async () => {
@@ -135,7 +132,7 @@ export default function ContactSection({ onOpenContact, onOpenResume }) {
       <div className="contact-container">
         
         {/* 1. Editorial Header */}
-        <header className="contact-header reveal-item">
+        <header className="contact-header reveal-on-scroll">
           <div className="contact-label-row">
             <span className="contact-label font-cinzel">INQUIRIES & COLLABORATIONS</span>
             <span className="contact-label-line" aria-hidden="true" />
@@ -153,7 +150,7 @@ export default function ContactSection({ onOpenContact, onOpenResume }) {
         </header>
 
         {/* 2. Primary Direct Invitation & Action Hero Card */}
-        <div className="contact-action-hero glass-panel reveal-item">
+        <div className="contact-action-hero glass-panel reveal-on-scroll">
           <div className="action-hero-content">
             <div className="action-hero-badge font-cinzel">
               <Sparkles size={14} className="text-olive" />
@@ -247,7 +244,7 @@ export default function ContactSection({ onOpenContact, onOpenResume }) {
 
         {/* 3. Studio Locations Grid */}
         <div className="contact-locations-block">
-          <div className="block-header reveal-item">
+          <div className="block-header reveal-on-scroll">
             <div className="block-label-row">
               <MapPin size={16} className="text-olive" />
               <span className="block-label font-cinzel">Studio Presences</span>
@@ -259,7 +256,7 @@ export default function ContactSection({ onOpenContact, onOpenResume }) {
             {STUDIO_LOCATIONS.map((loc) => (
               <div 
                 key={loc.city} 
-                className="location-card glass-card reveal-item"
+                className="location-card glass-card reveal-on-scroll"
                 onMouseEnter={playHover}
               >
                 <div className="location-top">
@@ -287,7 +284,7 @@ export default function ContactSection({ onOpenContact, onOpenResume }) {
 
         {/* 4. External Platforms & Publications */}
         <div className="contact-platforms-block">
-          <div className="block-header reveal-item">
+          <div className="block-header reveal-on-scroll">
             <div className="block-label-row">
               <Globe size={16} className="text-olive" />
               <span className="block-label font-cinzel">Digital Platforms</span>
@@ -302,7 +299,7 @@ export default function ContactSection({ onOpenContact, onOpenResume }) {
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="platform-card glass-card reveal-item"
+                className="platform-card glass-card reveal-on-scroll"
                 onClick={playClick}
                 onMouseEnter={playHover}
               >
@@ -323,7 +320,7 @@ export default function ContactSection({ onOpenContact, onOpenResume }) {
         </div>
 
         {/* 5. Editorial Colophon & Legal Footer */}
-        <div className="contact-colophon-bar reveal-item">
+        <div className="contact-colophon-bar reveal-on-scroll">
           <div className="colophon-left">
             <span className="colophon-brand font-cinzel">STUDIO RIYA</span>
             <span className="colophon-sep" aria-hidden="true">•</span>

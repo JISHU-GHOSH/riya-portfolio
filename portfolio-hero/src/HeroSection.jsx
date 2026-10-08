@@ -191,6 +191,9 @@ export default function HeroSection({
       {/* Full-screen Character Canvas Background */}
       <CharacterCanvas />
 
+      {/* Frosted vignette gradient overlay for text readability & atmospheric depth */}
+      <div className="hero-vignette" aria-hidden="true" />
+
       {/* Top-Center Frosted Glass Navigation Pill */}
       <header className="nav-pill-container">
         <nav className="nav-pill" role="navigation" aria-label="Main Navigation">
@@ -284,12 +287,23 @@ export default function HeroSection({
             </button>
           </div>
         </div>
+
+        {/* Luxury Bottom-Right Scroll Indicator */}
+        <a
+          href="#works"
+          className="scroll-indicator"
+          aria-label="Scroll down to explore works"
+          onClick={(e) => handleNavClick(e, 'works')}
+        >
+          <span>Explore Works</span>
+          <span className="scroll-indicator-arrow" aria-hidden="true">↓</span>
+        </a>
       </section>
 
-      {/* Downstream Content Container for Works, Practice, Contact, etc. */}
-      <div className="hero-children">
+      {/* Downstream Content Container with Frosted Glass Transparency */}
+      <main className="content-wrapper">
         {children || <ProjectsSection onOpenContact={onOpenContact} />}
-      </div>
+      </main>
     </div>
   );
 }

@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { ArrowUpRight, X, Sparkles, SlidersHorizontal, Eye } from 'lucide-react';
 import ProjectMockup from './ProjectMockup';
+import useScrollReveal from './useScrollReveal';
 import { playClick, playHover, playOpen, playClose } from './soundEffects';
 import './ProjectsSection.css';
 
@@ -102,11 +103,15 @@ const FILTER_CATEGORIES = [
 export default function ProjectsSection({ onOpenContact }) {
   const [selectedFilter, setSelectedFilter] = useState('All');
   const [activeArtwork, setActiveArtwork] = useState(null);
+  const sectionRef = useRef(null);
 
   // Filtered artworks
   const displayedWorks = selectedFilter === 'All'
     ? FEATURED_WORKS
     : FEATURED_WORKS.filter((work) => work.category === selectedFilter);
+
+  // High-performance scroll reveal observer
+  useScrollReveal(sectionRef, [displayedWorks]);
 
   // Close lightbox handler
   const handleCloseLightbox = useCallback(() => {
@@ -142,10 +147,10 @@ export default function ProjectsSection({ onOpenContact }) {
   }, [activeArtwork, handleCloseLightbox]);
 
   return (
-    <section id="works" className="works-section">
+    <section id="works" className="works-section" ref={sectionRef}>
       <div className="works-container">
         {/* Editorial Section Header */}
-        <header className="works-header">
+        <header className="works-header reveal-on-scroll">
           <div className="works-label-row">
             <span className="works-label">SELECTED WORKS</span>
             <span className="works-label-line" />
@@ -159,7 +164,7 @@ export default function ProjectsSection({ onOpenContact }) {
         </header>
 
         {/* Filter Navigation Pills */}
-        <div className="works-filters" role="tablist" aria-label="Artwork categories">
+        <div className="works-filters reveal-on-scroll" style={{ '--reveal-delay': '120ms' }} role="tablist" aria-label="Artwork categories">
           {FILTER_CATEGORIES.map((cat) => {
             const count = cat === 'All'
               ? FEATURED_WORKS.length
@@ -188,10 +193,11 @@ export default function ProjectsSection({ onOpenContact }) {
 
         {/* 4 Exhibition Cards in Grid */}
         <div className="works-grid">
-          {displayedWorks.map((work) => (
+          {displayedWorks.map((work, idx) => (
             <article
               key={work.id}
-              className="work-card"
+              className="work-card reveal-on-scroll"
+              style={{ '--reveal-delay': `${idx * 130 + 160}ms` }}
               onMouseEnter={() => playHover()}
             >
               {/* Top Artwork Media Frame */}

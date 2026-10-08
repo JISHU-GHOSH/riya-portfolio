@@ -152,18 +152,15 @@ export const HONORS_RESIDENCIES = [
  * curated exhibition timeline, and international honors.
  */
 export default function AboutSection({ onOpenResume, onOpenContact }) {
-  const [sectionRef] = useScrollReveal({
-    threshold: 0.1,
-    rootMargin: '0px 0px -40px 0px',
-    selector: '.reveal-item',
-  });
+  const sectionRef = React.useRef(null);
+  useScrollReveal(sectionRef);
 
   return (
     <section id="practice" ref={sectionRef} className="practice-section" aria-label="Practice and Philosophy">
       <div className="practice-container">
         
         {/* 1. Editorial Section Header */}
-        <header className="practice-header reveal-item">
+        <header className="practice-header reveal-on-scroll">
           <div className="practice-label-row">
             <span className="practice-label">PRACTICE & PHILOSOPHY</span>
             <span className="practice-label-line" aria-hidden="true" />
@@ -181,7 +178,7 @@ export default function AboutSection({ onOpenResume, onOpenContact }) {
 
         {/* 2. Curatorial Statement & Philosophical Pillars */}
         <div className="practice-statement-grid">
-          <article className="practice-statement-text reveal-item">
+          <article className="practice-statement-text reveal-on-scroll">
             <h3 className="statement-subhead font-cinzel">Curatorial Statement</h3>
             
             <p className="statement-paragraph">
@@ -226,7 +223,7 @@ export default function AboutSection({ onOpenResume, onOpenContact }) {
           </article>
 
           {/* Right Column: Pull Quote & Core Values */}
-          <aside className="practice-pullquote-panel reveal-item">
+          <aside className="practice-pullquote-panel reveal-on-scroll">
             <div className="pullquote-card glass-panel">
               <div className="pullquote-symbol font-serif" aria-hidden="true">“</div>
               <blockquote className="pullquote-body font-serif">
@@ -260,7 +257,7 @@ export default function AboutSection({ onOpenResume, onOpenContact }) {
 
         {/* 3. Core Artistic Disciplines */}
         <div className="practice-disciplines-block">
-          <div className="block-header reveal-item">
+          <div className="block-header reveal-on-scroll">
             <div className="block-label-row">
               <Layers size={16} className="text-olive" />
               <span className="block-label font-cinzel">Core Disciplines</span>
@@ -275,7 +272,7 @@ export default function AboutSection({ onOpenResume, onOpenContact }) {
             {ARTISTIC_DISCIPLINES.map((discipline) => (
               <div
                 key={discipline.id}
-                className="discipline-card glass-card reveal-item"
+                className="discipline-card glass-card reveal-on-scroll"
                 onMouseEnter={playHover}
               >
                 <div className="discipline-card-top">
@@ -306,7 +303,7 @@ export default function AboutSection({ onOpenResume, onOpenContact }) {
 
         {/* 4. Curated Exhibition History Timeline (2023–2026) */}
         <div className="practice-timeline-block">
-          <div className="block-header reveal-item">
+          <div className="block-header reveal-on-scroll">
             <div className="block-label-row">
               <Calendar size={16} className="text-olive" />
               <span className="block-label font-cinzel">Chronology</span>
@@ -324,7 +321,7 @@ export default function AboutSection({ onOpenResume, onOpenContact }) {
               {EXHIBITION_HISTORY.map((item, idx) => (
                 <div
                   key={`${item.year}-${idx}`}
-                  className="timeline-item reveal-item"
+                  className="timeline-item reveal-on-scroll"
                   onMouseEnter={playHover}
                 >
                   {/* Year & Node */}
@@ -363,7 +360,7 @@ export default function AboutSection({ onOpenResume, onOpenContact }) {
 
         {/* 5. Honors & Residencies */}
         <div className="practice-honors-block">
-          <div className="block-header reveal-item">
+          <div className="block-header reveal-on-scroll">
             <div className="block-label-row">
               <Award size={16} className="text-olive" />
               <span className="block-label font-cinzel">Distinctions</span>
@@ -375,7 +372,7 @@ export default function AboutSection({ onOpenResume, onOpenContact }) {
             {HONORS_RESIDENCIES.map((honor, idx) => (
               <div
                 key={idx}
-                className="honor-card glass-card reveal-item"
+                className="honor-card glass-card reveal-on-scroll"
                 onMouseEnter={playHover}
               >
                 <div className="honor-icon-wrapper" aria-hidden="true">
@@ -394,7 +391,7 @@ export default function AboutSection({ onOpenResume, onOpenContact }) {
         </div>
 
         {/* 6. Editorial Practice Footer Callout */}
-        <div className="practice-footer-callout glass-panel reveal-item">
+        <div className="practice-footer-callout glass-panel reveal-on-scroll">
           <div className="footer-callout-text">
             <div className="callout-tag font-cinzel">Studio Practice & Inquiries</div>
             <h3 className="callout-title font-serif">

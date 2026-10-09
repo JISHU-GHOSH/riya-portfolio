@@ -28,155 +28,135 @@ frame_map = [
     122, 125, 128, 132, 136, 139, 142, 145
 ]
 
-# Small black bindi parameters
-BINDI_RADIUS = 4.8
-BINDI_COLOR = (18, 16, 20) # Deep charcoal black (BGR)
-BROW_OFFSET = 8.0 # Offset up along facial symmetry axis from inner brow center
+BINDI_COLOR = (18, 16, 20)  # Deep carbon black (BGR)
+BASE_RADIUS = 4.5
 
 def inpaint_frame(img):
     mask = np.zeros(img.shape[:2], dtype=np.uint8)
     mask[790:1020, 1590:1870] = 255
     return cv2.inpaint(img, mask, 6, cv2.INPAINT_TELEA)
 
-print("Step 1: Reading video frames from source...")
-cap = cv2.VideoCapture(VIDEO_PATH)
-if not cap.isOpened():
-    print(f"Error opening video: {VIDEO_PATH}")
-    sys.exit(1)
-
-all_frames = {}
-needed_indices = set(frame_map)
-needed_indices.add(0) # Center direct eye-contact frame
-
-frame_idx = 0
-while True:
-    ret, frame = cap.read()
-    if not ret: break
-    if frame_idx in needed_indices:
-        all_frames[frame_idx] = frame
-    frame_idx += 1
-cap.release()
-
-print(f"Loaded {len(all_frames)} frames from video.")
-
-print("Step 2: Tracking 3D facial landmarks and symmetry axis...")
-mp_face_mesh = mp.solutions.face_mesh
-raw_tracked = []
-
-with mp_face_mesh.FaceMesh(static_image_mode=True, max_num_faces=1, refine_landmarks=True, min_detection_confidence=0.2) as face_mesh:
-    for i, f_num in enumerate(frame_map):
-        img = inpaint_frame(all_frames[f_num])
-        h, w = img.shape[:2]
-        res = face_mesh.process(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
-        lms = res.multi_face_landmarks[0].landmark
-        
-        p55 = lms[55]
-        p285 = lms[285]
-        p10 = lms[10]
-        p152 = lms[152]
-        p454 = lms[454]
-        p234 = lms[234]
-        p9 = lms[9]
-        
-        brow_cx = (p55.x + p285.x) * 0.5 * w
-        brow_cy = (p55.y + p285.y) * 0.5 * h
-        
-        dx_up = (p10.x - p152.x) * w
-        dy_up = (p10.y - p152.y) * h
-        axis_len = np.sqrt(dx_up**2 + dy_up**2)
-        ux = dx_up / axis_len
-        uy = dy_up / axis_len
-        
-        bx = brow_cx + ux * BROW_OFFSET
-        by = brow_cy + uy * BROW_OFFSET
-        
-        roll = np.degrees(np.arctan2(-dx_up, -dy_up))
-        
-        dist_left = abs(p454.x - p9.x)
-        dist_right = abs(p9.x - p234.x)
-        total_w = dist_left + dist_right
-        yaw_ratio = min(dist_left, dist_right) / (total_w * 0.5) if total_w > 0 else 1.0
-        scale_x = max(0.45, min(1.0, yaw_ratio))
-        
-        raw_tracked.append({
-            'idx': i,
-            'img': img,
-            'bx': bx,
-            'by': by,
-            'roll': roll,
-            'scale_x': scale_x
-        })
-
-print("Step 3: Cyclically smoothing 64 circular trajectory frames...")
-n = len(raw_tracked)
-def smooth_cyclic(values):
-    return [0.5 * values[i] + 0.25 * values[(i - 1) % n] + 0.25 * values[(i + 1) % n] for i in range(n)]
-
-bxs = smooth_cyclic([p['bx'] for p in raw_tracked])
-bys = smooth_cyclic([p['by'] for p in raw_tracked])
-rolls = smooth_cyclic([p['roll'] for p in raw_tracked])
-scales = smooth_cyclic([p['scale_x'] for p in raw_tracked])
-
-def render_bindi(img, bx, by, roll, scale_x):
+def render_bindi_3d(img, face_mesh):
     h, w = img.shape[:2]
-    rad = BINDI_RADIUS
-    rx = max(2, int(rad * scale_x))
-    ry = int(rad)
-    
-    patch_r = 12
-    x1 = max(0, int(bx) - patch_r)
-    y1 = max(0, int(by) - patch_r)
-    x2 = min(w, int(bx) + patch_r + 1)
-    y2 = min(h, int(by) + patch_r + 1)
-    
+    res = face_mesh.process(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+    if not res.multi_face_landmarks:
+        print("Warning: No face detected!")
+        return img
+    lms = res.multi_face_landmarks[0].landmark
+
+    # 3D Forehead landmarks from MediaPipe FaceMesh:
+    # 8: Glabella (between lower brows)
+    # 9: Mid-forehead (midline upper forehead)
+    # 107: Right inner eyebrow tip
+    # 336: Left inner eyebrow tip
+    p8 = lms[8]
+    p9 = lms[9]
+    p107 = lms[107]
+    p336 = lms[336]
+
+    # Midpoint of inner eyebrows:
+    brow_mid_x = (p107.x + p336.x) * 0.5
+    brow_mid_y = (p107.y + p336.y) * 0.5
+    brow_mid_z = (p107.z + p336.z) * 0.5
+
+    # Forehead midline vertical vector from glabella to mid-forehead:
+    v_up_x = p9.x - p8.x
+    v_up_y = p9.y - p8.y
+    v_up_z = p9.z - p8.z
+
+    # Center of bindi in normalized and pixel coords:
+    # Positioned along the 3D midline, 25% of the distance from brow midpoint to mid-forehead
+    cx = (brow_mid_x + v_up_x * 0.25) * w
+    cy = (brow_mid_y + v_up_y * 0.25) * h
+
+    # 2D orientation vector of her forehead:
+    vh_2d = np.array([(p336.x - p107.x) * w, (p336.y - p107.y) * h])
+    angle_deg = np.degrees(np.arctan2(vh_2d[1], vh_2d[0]))
+
+    # 3D Normal for perspective foreshortening:
+    v_h_3d = np.array([p336.x - p107.x, p336.y - p107.y, p336.z - p107.z])
+    v_v_3d = np.array([v_up_x, v_up_y, v_up_z])
+    normal = np.cross(v_h_3d, v_v_3d)
+    norm_len = np.linalg.norm(normal)
+    if norm_len > 1e-6:
+        normal = normal / norm_len
+    else:
+        normal = np.array([0, 0, 1])
+
+    # Perspective foreshortening:
+    scale_h = max(0.40, np.sqrt(max(0.01, 1.0 - normal[0]**2)))
+    scale_v = max(0.50, np.sqrt(max(0.01, 1.0 - normal[1]**2)))
+
+    rx = max(2, int(round(BASE_RADIUS * scale_h)))
+    ry = max(2, int(round(BASE_RADIUS * scale_v)))
+
+    # Anti-aliased sub-pixel rendering with gentle edge blur:
+    patch_r = 14
+    icx, icy = int(round(cx)), int(round(cy))
+    y1 = max(0, icy - patch_r)
+    y2 = min(h, icy + patch_r + 1)
+    x1 = max(0, icx - patch_r)
+    x2 = min(w, icx + patch_r + 1)
+
     patch = img[y1:y2, x1:x2].copy()
     ph, pw = patch.shape[:2]
-    pcx = int(bx) - x1
-    pcy = int(by) - y1
-    
+    pcx = icx - x1
+    pcy = icy - y1
+
     overlay = patch.copy()
-    cv2.ellipse(overlay, (pcx, pcy), (rx, ry), -roll, 0, 360, BINDI_COLOR, -1, cv2.LINE_AA)
-    
+    cv2.ellipse(overlay, (pcx, pcy), (rx, ry), angle_deg, 0, 360, BINDI_COLOR, -1, cv2.LINE_AA)
+
     mask = np.zeros((ph, pw), dtype=np.uint8)
-    cv2.ellipse(mask, (pcx, pcy), (rx, ry), -roll, 0, 360, 255, -1, cv2.LINE_AA)
+    cv2.ellipse(mask, (pcx, pcy), (rx, ry), angle_deg, 0, 360, 255, -1, cv2.LINE_AA)
     mask_blur = cv2.GaussianBlur(mask, (3, 3), 0.5) / 255.0
-    
+
     blended = (overlay * mask_blur[:, :, None] + patch * (1.0 - mask_blur[:, :, None])).astype(np.uint8)
     out = img.copy()
     out[y1:y2, x1:x2] = blended
     return out
 
-print("Step 4: Rendering small black bindi on 64 directional frames...")
-for i, p in enumerate(raw_tracked):
-    out = render_bindi(p['img'], bxs[i], bys[i], rolls[i], scales[i])
-    out_path = os.path.join(OUT_DIR, f"{i:03d}.webp")
-    cv2.imwrite(out_path, out, [cv2.IMWRITE_WEBP_QUALITY, 92])
+def main():
+    print("Step 1: Loading video frames from source...")
+    cap = cv2.VideoCapture(VIDEO_PATH)
+    if not cap.isOpened():
+        print(f"Error opening video: {VIDEO_PATH}")
+        sys.exit(1)
 
-print("Step 5: Rendering small black bindi on center frame (Frame 0)...")
-raw_center = inpaint_frame(all_frames[0])
-h, w = raw_center.shape[:2]
+    all_frames = {}
+    needed_indices = set(frame_map)
+    needed_indices.add(0)
 
-with mp_face_mesh.FaceMesh(static_image_mode=True, max_num_faces=1, refine_landmarks=True) as face_mesh:
-    res = face_mesh.process(cv2.cvtColor(raw_center, cv2.COLOR_BGR2RGB))
-    lms = res.multi_face_landmarks[0].landmark
-    p55 = lms[55]
-    p285 = lms[285]
-    p10 = lms[10]
-    p152 = lms[152]
-    
-    brow_cx = (p55.x + p285.x) * 0.5 * w
-    brow_cy = (p55.y + p285.y) * 0.5 * h
-    dx_up = (p10.x - p152.x) * w
-    dy_up = (p10.y - p152.y) * h
-    axis_len = np.sqrt(dx_up**2 + dy_up**2)
-    ux = dx_up / axis_len
-    uy = dy_up / axis_len
-    
-    bx = brow_cx + ux * BROW_OFFSET
-    by = brow_cy + uy * BROW_OFFSET
-    roll = np.degrees(np.arctan2(-dx_up, -dy_up))
-    
-    final_center = render_bindi(raw_center, bx, by, roll, 1.0)
-    cv2.imwrite(os.path.join(OUT_DIR, "center.webp"), final_center, [cv2.IMWRITE_WEBP_QUALITY, 92])
+    frame_idx = 0
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            break
+        if frame_idx in needed_indices:
+            all_frames[frame_idx] = frame
+        frame_idx += 1
+    cap.release()
 
-print("Done! All 65 frames have the small black bindi rendered perfectly in the center.")
+    print(f"Loaded {len(all_frames)} frames from video.")
+
+    print("Step 2: Processing 64 directional frames with 3D facial surface anchor...")
+    mp_face_mesh = mp.solutions.face_mesh
+    with mp_face_mesh.FaceMesh(static_image_mode=True, max_num_faces=1, refine_landmarks=True, min_detection_confidence=0.2) as face_mesh:
+        for i, f_num in enumerate(frame_map):
+            inpainted = inpaint_frame(all_frames[f_num])
+            out = render_bindi_3d(inpainted, face_mesh)
+            out_path = os.path.join(OUT_DIR, f"{i:03d}.webp")
+            cv2.imwrite(out_path, out, [cv2.IMWRITE_WEBP_QUALITY, 92])
+            if (i + 1) % 16 == 0 or i == len(frame_map) - 1:
+                print(f"  Processed frame {i+1}/{len(frame_map)}")
+
+        print("Step 3: Processing neutral center frame (Frame 0)...")
+        center_inpainted = inpaint_frame(all_frames[0])
+        final_center = render_bindi_3d(center_inpainted, face_mesh)
+        center_path = os.path.join(OUT_DIR, "center.webp")
+        cv2.imwrite(center_path, final_center, [cv2.IMWRITE_WEBP_QUALITY, 92])
+        print("  Processed center.webp")
+
+    print("Success: All 65 frames have been updated with 3D surface-anchored black bindi!")
+
+if __name__ == "__main__":
+    main()

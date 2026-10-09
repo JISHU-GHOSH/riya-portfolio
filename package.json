@@ -1,0 +1,22 @@
+{
+  "name": "riya-portfolio-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Riya — Visual Artist & Creative Director luxury interactive portfolio",
+  "scripts": {
+    "dev": "npm --prefix portfolio-hero run dev",
+    "build": "npm --prefix portfolio-hero run build",
+    "preview": "npm --prefix portfolio-hero run preview",
+    "install:all": "npm --prefix portfolio-hero install"
+  },
+  "keywords": [
+    "react",
+    "vite",
+    "canvas",
+    "interactive-portfolio",
+    "head-tracking",
+    "artist-portfolio"
+  ],
+  "author": "Riya",
+  "license": "MIT"
+}
